@@ -1,0 +1,136 @@
+%problem 1
+t=-1:0.001:1;
+y1= inline('sin(20*pi*t)','t');
+y2= inline('cos(5*pi*t+(pi/4))','t');
+y3= inline('exp(-2*t)','t');
+y4= inline('exp(-0.25*t).*sin(20*pi*t)','t');
+subplot(2,2,1)
+plot(t,y1(t))
+legend("sin(20*pi*t)")
+xlabel("Time t")
+ylabel("y1(t)")
+subplot(2,2,2)
+plot(t,y2(t))
+legend("cos(5*pi*t+pi/4)")
+xlabel("Time t")
+ylabel("y2(t)")
+subplot(2,2,3)
+plot(t,y3(t))
+legend("exp(-2t)")
+xlabel("Time t")
+ylabel("y3(t)")
+subplot(2,2,4)
+plot(t,y4(t))
+legend("exp(-0.25t)*sin(20*pi*t)")
+xlabel("Time t")
+ylabel("y4(t)")
+
+
+
+%problem 2
+t=-5:0.001:5;
+x=inline('exp(-t)','t');
+subplot(2,2,1)
+plot(t, x(t))
+legend('x(t)')
+xlabel("Time t")
+ylabel("exp(-t)")
+subplot(2,2,2)
+plot(t, x(-t))
+legend('x(-t)')
+xlabel("Time t")
+ylabel("exp(t)")
+subplot(2,2,3)
+plot(t, x(t-1.5))
+legend('x(t-1.5)')
+xlabel("Time t")
+ylabel("exp(-t+1.5)")
+subplot(2,2,4)
+plot(t, x(2*t))
+legend('x(2t)')
+xlabel("Time t")
+ylabel("exp(-2t)")
+
+%problem 3
+data=load("ECG_Data.txt");
+plot(data)
+ylabel("Data")
+xlabel("Sample")
+
+jan_rain=load("RainFallIndia_Jan.txt");
+july_rain=load("RainFallIndia_July.txt");
+histogram(jan_rain)
+j1_mean=mean(jan_rain)
+j1_sd=std(jan_rain)
+histogram(july_rain)
+j2_mean=mean(july_rain)
+j2_sd=std(july_rain)
+
+[y,Fs]=audioread("Track001.wav");
+sound(y,Fs);
+
+%problem 4
+[s,Fs]=audioread("speech.wav");
+F=250;
+subplot(2,2,1)
+plot(fft(s))
+%plot(s,'y')
+xlabel("frequency")
+ylabel("s(n)")
+legend("S(n)")
+Y= s*cos(2*pi*F/Fs);
+subplot(2,2,2)
+%plot(Y,'r')
+legend("Y(n)")
+sound(s,Fs)
+plot(fft(y))
+
+
+% problem 5
+Fs=44100;
+num_sample=5000;
+t=(0:num_sample-1)/Fs;
+
+f1=sin(2*pi*200*t);
+f2=sin(2*pi*220*t);
+f=f1+f2;
+sound(f,Fs)
+plot(t,f)
+xlabel("Time t")
+ylabel("Function")
+
+%problem 6
+frequencies=[261.63,293.66,329.63,349.23,392.00,440.00,493.88,523.25];
+sample_rate=44100;
+fs=1/sample_rate;
+duration=0.5;
+sequence=[];
+for freq=frequencies
+    t=0:(1/sample_rate):duration;
+    signal=sin(2*pi*freq*t);
+    sequence=[sequence,signal];
+end
+
+sequence= sequence/max(abs(sequence));
+filename='do_re.wav';
+audiowrite(filename,sequence,sample_rate);
+sound(sequence,sample_rate);
+
+
+%problem 7
+tra=load("ConvFile1.txt");
+[tr, Fs]=audioread("Track001.wav");
+%sound(tr,Fs);
+plot(tr)
+legend("track001 data")
+plot(tra)
+legend("ConvFile1 data")
+w=conv(tra,tr);
+
+sound(w,Fs)
+plot(w)
+filename = 'exp1_4.wav';
+audiowrite(filename,w,Fs);
+
+legend("Resultant fucntion")
+
